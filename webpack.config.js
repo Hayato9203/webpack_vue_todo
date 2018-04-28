@@ -12,7 +12,7 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals()],
     output: {
-        filename: '[name].[hash].js',
+        filename: '[name].[hash:8].js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: './'
     },
@@ -30,7 +30,12 @@ module.exports = {
         }, {
             test: /\.css$/,
             exclude: /node_modules/,
-            use: ['style-loader', 'css-loader', {
+            use: ['style-loader', {
+                loader: 'css-loader',
+                options: {
+                    importLoaders: 1
+                }
+            }, {
                 loader: 'postcss-loader',
                 options: {
                     ident: 'postcss',
@@ -44,31 +49,8 @@ module.exports = {
             }]
         }, {
             test: /\.(jpg|png|gif|svg)$/i,
-            use: ['url-loader?limit=10000&name=images/[name].[hash:8].[ext]',
-                {
-                    loader: 'image-webpack-loader',
-                    options: {
-                        mozjpeg: {
-                            progressive: true,
-                            quality: 50
-                        },
-                        optipng: {
-                            enabled: true,
-                            optimizationLevel: 3
-                        },
-                        pngquant: {
-                            quality: '65-90',
-                            speed: 4
-                        },
-                        gifsicle: {
-                            interlaced: false,
-                            optimizationLevel: 2
-                        },
-                        webp: {
-                            quality: 75
-                        }
-                    }
-                }
+            include: path.resolve(__dirname, './src/assets/images'),
+            use: ['url-loader?limit=10000&name=images/[name].[hash:8].[ext]'
             ]
         }]
     },
