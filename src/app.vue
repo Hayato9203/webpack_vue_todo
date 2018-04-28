@@ -6,16 +6,16 @@
 
 <script>
 export default {
-    data() {
-        return {
-            text: 'TEST'
-        }
-    },
-}
+  data() {
+    return {
+      text: "TEST"
+    };
+  }
+};
 </script>
 
 <style scoped>
 .text {
-    color: brown;
+  color: brown;
 }
 </style>
