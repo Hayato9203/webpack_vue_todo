@@ -6,6 +6,7 @@
   "scripts": {
     "build": "set NODE_ENV=production&&webpack --progress --config webpack.config.js --colors",
     "dev": "set NODE_ENV=development&&webpack-dev-server --progress --config webpack.config.js --colors",
+    "start": "npm run build && npm run dev",
     "lint": "./node_modules/.bin/eslint --ext .js,.vue src test/unit test/e2e/specs --color"
   },
   "repository": {

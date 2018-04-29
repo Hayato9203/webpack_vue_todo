@@ -1,22 +1,14 @@
 <template>
-    <div id="text">
-        {{text}}
-    </div>
+  <div id="app">
+  </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  data() {
-    return {
-      text: "TEST"
-    }
-  }
+  components: {}
 }
 </script>
 
-<style scoped>
-#text {
-  color: brown;
-}
+<style>
 </style>

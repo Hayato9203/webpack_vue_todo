@@ -1,5 +1,9 @@
-Module build failed: Error: spawn: npm run dev时,解决方法是npm rebuild
+Module build failed: Error: spawn时,npm run dev时,解决方法是npm rebuild
 
-当我访问http://localhost:9000/时，它应该显示由HtmlWebpackPlugin生成的index.html页面,我收到一个404:不能GET /,只在windows平台上出现，解决方法是去掉require('clean-webpack-plugin')
+当我访问http://localhost:9000/时，它应该显示由HtmlWebpackPlugin生成的index.html页面,我收到一个404:不能GET /,只在windows平台上出现，(1). 解决方法是去掉require('clean-webpack-plugin'),先build生成production再dev运行development 推荐：(2).在output设置{path: path.resolve(__dirname, './dist'),publicPath: '/'}
 
 devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-node-externals和target:node,require只在target为node后台环境,因为在web环境,没有require
+
+设置development环境时,main.js被压缩了,暂时猜想是由于做了第二个解决方法的原因
+
+出现[Vue warn]: Cannot find element: #app

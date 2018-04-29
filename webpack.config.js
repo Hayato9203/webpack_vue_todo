@@ -21,8 +21,8 @@ const config = {
   // externals: [nodeExternals()],
   output: {
     filename: '[name].[hash:8].js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: './'
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/'
   },
   module: {
     rules: [{
@@ -95,20 +95,10 @@ const config = {
     //   'process.env': {
     //     NODE_ENV: isDev ? '"development"' : '"production"'
     //   }
-    // }),
-    // 让UglifyJS自动删除警告代码块,并清除source-map的waring
-    new UglifyJsPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        minimize: true,
-        compress: {
-          warnings: false
-        }
-      }
+    // }),    
+    new HtmlWebpackPlugin({
+      inject: 'body'
     }),
-    new HtmlWebpackPlugin({}),
-    // 清除output文件夹
-    // new CleanWebpackPlugin(['dist']),
     new VueLoaderPlugin()
   ],
   resolve: {
@@ -119,16 +109,37 @@ const config = {
 
 if (isDev) {
   config.devServer = {
-    contentBase: path.join(__dirname, "dist"),
-    compress: true,
-    port: 9000,
-    // 错误显示到网页
-    overlay: {
-      warnings: true,
-      errors: true
+      contentBase: path.join(__dirname, "dist"),
+      compress: true,
+      port: 9000,
+      // 错误显示到网页
+      overlay: {
+        warnings: true,
+        errors: true
+      },
+      hot: true
     },
-    hot: true
-  }
+    config.plugins.push(
+      // HMR不应该用在production模式.
+      new webpack.HotModuleReplacementPlugin(),
+      // 减少不需要的信息展示
+      new webpack.NoEmitOnErrorsPlugin()
+    )
+} else {
+  config.plugins.push(
+    // 清除output文件夹
+    new CleanWebpackPlugin(['dist']),
+    // 让UglifyJS自动删除警告代码块,并清除source-map的waring
+    new UglifyJsPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        minimize: true,
+        compress: {
+          warnings: false
+        }
+      }
+    })
+  )
 }
 
 module.exports = config
