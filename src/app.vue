@@ -1,21 +1,22 @@
 <template>
-    <div class="text">
+    <div id="text">
         {{text}}
     </div>
 </template>
 
 <script>
 export default {
+  name: 'App',
   data() {
     return {
       text: "TEST"
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped>
-.text {
+#text {
   color: brown;
 }
 </style>

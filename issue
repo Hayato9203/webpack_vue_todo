@@ -1,1 +1,5 @@
 Module build failed: Error: spawn: npm run dev时,解决方法是npm rebuild
+
+当我访问http://localhost:9000/时，它应该显示由HtmlWebpackPlugin生成的index.html页面,我收到一个404:不能GET /,只在windows平台上出现，解决方法是去掉require('clean-webpack-plugin')
+
+devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-node-externals和target:node,require只在target为node后台环境,因为在web环境,没有require

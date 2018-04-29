@@ -5,16 +5,20 @@ const {
 } = require('vue-loader')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 
 // 从package.json中获得NODE_ENV
 const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
-  devtool: 'eval-source-map',
+  // 根据NODE_ENV确定环境
+  mode: isDev ? 'development' : 'production',
   entry: path.resolve(__dirname, 'src/index.js'),
-  target: 'node',
-  externals: [nodeExternals()],
+  // 下面的设定会导致require is not defined
+  // target: 'node',
+  // externals: [nodeExternals()],
   output: {
     filename: '[name].[hash:8].js',
     path: path.resolve(__dirname, 'dist'),
@@ -24,17 +28,19 @@ const config = {
     rules: [{
       test: /\.js$/,
       loader: "babel-loader",
-      exclude: /node_modules/,
+      include: [
+        path.resolve(__dirname, './src')
+      ],
       options: {
         presets: ["latest"]
       }
     }, {
       test: /\.vue$/,
-      use: ['vue-loader', 'style-loader', 'css-loader']
+      loader: 'vue-loader'
     }, {
       test: /\.css$/,
       exclude: /node_modules/,
-      use: ['style-loader', {
+      use: ['vue-style-loader', {
         loader: 'css-loader',
         options: {
           importLoaders: 1
@@ -48,7 +54,8 @@ const config = {
               browsers: ['last 5 versions']
             }),
             require('cssnano')
-          ]
+          ],
+          sourceMap: true
         }
       }]
     }, {
@@ -83,19 +90,31 @@ const config = {
     }]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: isDev ? '"development"' : '"production"'
+    // 请记住，设置NODE_ENV不会自动设置模式
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     NODE_ENV: isDev ? '"development"' : '"production"'
+    //   }
+    // }),
+    // 让UglifyJS自动删除警告代码块,并清除source-map的waring
+    new UglifyJsPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        minimize: true,
+        compress: {
+          warnings: false
+        }
       }
     }),
     new HtmlWebpackPlugin({}),
     // 清除output文件夹
-    new CleanWebpackPlugin(['dist']),
+    // new CleanWebpackPlugin(['dist']),
     new VueLoaderPlugin()
   ],
   resolve: {
     extensions: ["*", ".js", ".vue"]
-  }
+  },
+  devtool: 'eval-source-map'
 }
 
 if (isDev) {
@@ -107,7 +126,8 @@ if (isDev) {
     overlay: {
       warnings: true,
       errors: true
-    }
+    },
+    hot: true
   }
 }
 
