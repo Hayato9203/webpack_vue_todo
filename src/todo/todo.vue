@@ -2,22 +2,26 @@
   <section class="real-app">
     <input type="text" class="input" autofocus="autofocus" placeholder="TODO" @keyup.enter="addTodo">
     <item :todo="todo"></item>
+    <tabs :filter="filter"></tabs>
   </section>
 </template>
 
 <script>
-import Item from "@/todo/item.vue";
+import Item from "@/todo/item.vue"
+import Tabs from "@/todo/tabs.vue"
+
 export default {
   data() {
     return {
-      todo: { id: 0, content: `This is TODO`, completed: false }
+      todo: { id: 0, content: `This is TODO`, completed: false },
+      filter: 'all'
     }
   },
   methods: {
     addTodo() {}
   },
   components: {
-    Item
+    Item, Tabs
   }
 }
 </script>
