@@ -6,4 +6,4 @@ devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-
 
 设置development环境时,main.js被压缩了,暂时猜想是由于做了第二个解决方法的原因
 
-出现[Vue warn]: Cannot find element: #app
+出现[Vue warn]: Cannot find element: #app,绕过

@@ -96,9 +96,7 @@ const config = {
     //     NODE_ENV: isDev ? '"development"' : '"production"'
     //   }
     // }),    
-    new HtmlWebpackPlugin({
-      inject: 'body'
-    }),
+    new HtmlWebpackPlugin(),
     new VueLoaderPlugin()
   ],
   resolve: {

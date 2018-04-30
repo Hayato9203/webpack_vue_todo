@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-// import './assets/images/bg.jpg'
 import './assets/styles/style.css'
 
 const root = document.createElement('div')
@@ -11,4 +10,4 @@ document.body.appendChild(root)
 new Vue({
   // h意思是hyperscript: render: function (createElement) { return createElement(App) }
   render: (h) => h(App)
-}).$mount('#app')
+}).$mount(root)
