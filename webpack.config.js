@@ -137,9 +137,9 @@ if (isDev) {
     ),
     config.module.rules.push({
       // 处理stly文件 
-      test: /\.styl$/,
+      test: /\.styl(us)?$/,
       use: [
-        'style-loader', 'css-loader', {
+        'vue-style-loader', 'css-loader', {
           loader: 'postcss-loader',
           options: {
             ident: 'postcss',
@@ -170,9 +170,9 @@ if (isDev) {
       })
     ),
     config.module.rules.push({
-      test: /\.styl$/,
+      test: /\.styl(us)?$/,
       use: ExtractTextPlugin({
-        fallback: 'style-loader',
+        fallback: 'vue-style-loader',
         use: [
           'css-loader',
           {
