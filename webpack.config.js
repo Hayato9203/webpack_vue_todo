@@ -16,6 +16,7 @@ const config = {
   // 根据NODE_ENV确定环境
   mode: isDev ? 'development' : 'production',
   entry: path.resolve(__dirname, 'src/index.js'),
+  context: path.resolve(__dirname, 'src/'),
   // 下面的设定会导致require is not defined
   // target: 'node',
   // externals: [nodeExternals()],
