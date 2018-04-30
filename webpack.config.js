@@ -26,68 +26,82 @@ const config = {
   },
   module: {
     rules: [{
-      test: /\.js$/,
-      loader: "babel-loader",
-      include: [
-        path.resolve(__dirname, './src')
-      ],
-      options: {
-        presets: ["latest"]
-      }
-    }, {
-      test: /\.vue$/,
-      loader: 'vue-loader'
-    }, {
-      test: /\.css$/,
-      exclude: /node_modules/,
-      use: ['vue-style-loader', {
-        loader: 'css-loader',
-        options: {
-          importLoaders: 1
-        }
+        test: /\.js$/,
+        loader: "babel-loader",
+        include: [
+          path.resolve(__dirname, './src')
+        ]
       }, {
-        loader: 'postcss-loader',
-        options: {
-          ident: 'postcss',
-          plugins: [
-            require('autoprefixer')({
-              browsers: ['last 5 versions']
-            }),
-            require('cssnano')
-          ],
-          sourceMap: true
-        }
-      }]
-    }, {
-      test: /\.(jpg|png|gif|svg)$/i,
-      include: path.resolve(__dirname, './src/assets/images'),
-      use: ['url-loader?limit=8196&name=images/[name].[hash:8].[ext]',
-        {
-          loader: 'image-webpack-loader',
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }, {
+        test: /\.jsx$/,
+        loader: 'babel-loader'
+      }, {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: ['vue-style-loader', {
+          loader: 'css-loader',
           options: {
-            mozjpeg: {
-              progressive: true,
-              quality: 50
-            },
-            optipng: {
-              enabled: true,
-              optimizationLevel: 3
-            },
-            pngquant: {
-              quality: '65-90',
-              speed: 4
-            },
-            gifsicle: {
-              interlaced: false,
-              optimizationLevel: 2
-            },
-            webp: {
-              quality: 75
+            importLoaders: 1
+          }
+        }, {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss',
+            plugins: [
+              require('autoprefixer')({
+                browsers: ['last 5 versions']
+              }),
+              require('cssnano')
+            ],
+            sourceMap: true
+          }
+        }]
+      }, {
+        test: /\.(jpg|png|gif|svg)$/i,
+        include: path.resolve(__dirname, './src/assets/images'),
+        use: ['url-loader?limit=8196&name=images/[name].[hash:8].[ext]',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: {
+                progressive: true,
+                quality: 50
+              },
+              optipng: {
+                enabled: true,
+                optimizationLevel: 3
+              },
+              pngquant: {
+                quality: '65-90',
+                speed: 4
+              },
+              gifsicle: {
+                interlaced: false,
+                optimizationLevel: 2
+              },
+              webp: {
+                quality: 75
+              }
             }
           }
-        }
-      ]
-    }]
+        ]
+      },
+      // 处理stly文件 
+      {
+        test: /\.styl$/,
+        use: [
+          'style-loader', 'css-loader', {
+            loader: 'postcss-loader',
+            options: {
+              // 可使用前者生成的sourceMap,使编译更快
+              sourceMap: true
+            }
+          }, 'stylus-loader'
+        ]
+      }
+    ]
   },
   plugins: [
     // 请记住，设置NODE_ENV不会自动设置模式
