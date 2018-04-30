@@ -7,3 +7,5 @@ devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-
 设置development环境时,main.js被压缩了,暂时猜想是由于做了第二个解决方法的原因
 
 出现[Vue warn]: Cannot find element: #app,绕过
+
+webpack编译vue时,stlye中lang="less"编译不通过,解决方法时在rules的less中使用loader: 'vue-style-loader!css-loader!less-loader'

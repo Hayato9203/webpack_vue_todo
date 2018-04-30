@@ -30,13 +30,21 @@ const config = {
       loader: "babel-loader",
       include: [
         path.resolve(__dirname, './src')
-      ]
+      ],
+      exclude: file => (
+        /node_modules/.test(file) &&
+        !/\.vue\.js/.test(file)
+      )
     }, {
       test: /\.vue$/,
       loader: 'vue-loader'
     }, {
       test: /\.jsx$/,
       loader: 'babel-loader'
+    }, {
+      test: /\.less$/,
+      // 解决vue文件中的style lang="less"
+      loader: 'vue-style-loader!css-loader!less-loader'
     }, {
       test: /\.css$/,
       exclude: /node_modules/,
@@ -100,9 +108,9 @@ const config = {
     new VueLoaderPlugin()
   ],
   resolve: {
-    extensions: ["*", ".js", ".vue"],
+    extensions: ["*", ".js", ".vue", ".less"],
     alias: {
-      vue: 'vue/dist/vue.js',
+      'vue$': 'vue/dist/vue.esm.js',
       '@': path.resolve(__dirname, 'src')
     }
   },
