@@ -1,1 +1,1 @@
-transform-vue-jsx - 专门转换vue里面的jsx代码
+transform-vue-jsx - 专门转换vue里面的jsx代码,jsx直接在javascript中写html,vue或者jsx最终都会转换为render的createElement方法
