@@ -62,8 +62,8 @@
       cursor pointer
       border 1px solid rgba(175, 47, 47, 0)
       &.actived {
-          border-color rgba(175, 47, 47, 0.4)
-          border-radius 5px
+        border-color rgba(175, 47, 47, 0.4)
+        border-radius 5px
       }
   }
 }

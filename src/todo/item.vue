@@ -9,13 +9,17 @@
 <script>
 export default {
   props: {
+    // 从todo.vue中获得:todo=todo的Object
     todo: {
       type: Object,
       required: true
     }
   },
   methods: {
-    deleteTodo() {}
+    deleteTodo () {
+      // 父组件todo会监听该子组件item的'del'事件
+      this.$emit('del', this.todo.id)
+    }
   }
 }
 </script>
