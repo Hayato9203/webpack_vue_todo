@@ -3,7 +3,8 @@
     <input type="text" class="input" autofocus="autofocus" placeholder="TODO" @keyup.enter="addTodo">
     <!-- @del监听子组件$emit的'del'事件' -->
     <item :todo="todo" v-for="todo in todos" :key="todo.id" @del="deleteTodo"></item>
-    <tabs :filter="filter"></tabs>
+    <!-- 给子组件传数据 -->
+    <tabs :filter="filter" :todos="todos"></tabs>
   </section>
 </template>
 

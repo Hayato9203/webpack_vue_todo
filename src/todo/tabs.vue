@@ -1,6 +1,6 @@
 <template>
   <div class="helper">
-    <span class="left">2 items left</span>
+    <span class="left">{{unCompletedNum}} items left</span>
     <span class="tabs">
       <span v-for="state in states" :key="state" :class="['state', filter === state ? 'active' : '']" @click="toggleFilter(state)">{{state}}</span>
     </span>
@@ -13,6 +13,9 @@
     props: {
       filter: {
         type: String, required: true
+      },
+      todos: {
+        type: Array, required: true
       }
     },
     data() {
@@ -23,6 +26,13 @@
     methods: {
       clearAllCompleted () {},
       toggleFilter () {}
+    },
+    // 计算属性
+    computed: {
+      // 获得未完成的todo长度
+      unCompletedNum () {
+        return this.todos.filter(todo => !todo.completed).length
+      }
     }
   }
 </script>
