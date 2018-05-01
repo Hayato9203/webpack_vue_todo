@@ -24,7 +24,9 @@
       }
     },
     methods: {
-      clearAllCompleted () {},
+      clearAllCompleted () {
+        this.$emit('clear')
+      },
       // 点击all, active, completed时显示不同的内容
       toggleFilter (state) {
         this.$emit('toggle', state)

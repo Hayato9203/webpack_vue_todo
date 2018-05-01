@@ -5,6 +5,7 @@ const {
 } = require('vue-loader')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// 将css单独打包出来
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
@@ -21,7 +22,7 @@ const config = {
   // target: 'node',
   // externals: [nodeExternals()],
   output: {
-    filename: '[name].[hash:8].js',
+    filename: '[name].[hash:8].bundle.js',
     path: path.resolve(__dirname, './dist'),
     publicPath: '/'
   },
@@ -156,36 +157,39 @@ if (isDev) {
       ]
     })
 } else {
-  config.plugins.push(
-      // 清除output文件夹
-      new CleanWebpackPlugin(['dist']),
-      // 让UglifyJS自动删除警告代码块,并清除source-map的waring
-      new UglifyJsPlugin({
-        sourceMap: true,
-        uglifyOptions: {
-          minimize: true,
-          compress: {
-            warnings: false
+  config.module.rules.push({
+    test: /\.styl(us)?$/,
+    use: ExtractTextPlugin.extract({
+      fallback: 'vue-style-loader',
+      use: [
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            minimize: true,
+            sourceMap: true
           }
-        }
-      })
-    ),
-    config.module.rules.push({
-      test: /\.styl(us)?$/,
-      use: ExtractTextPlugin({
-        fallback: 'vue-style-loader',
-        use: [
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          'stylus-loader'
-        ]
-      })
+        },
+        'stylus-loader?sourceMap=true'
+      ]
     })
+  })
+  config.plugins.push(
+    // 清除output文件夹
+    new CleanWebpackPlugin(['dist']),
+    // 让UglifyJS自动删除警告代码块,并清除source-map的waring
+    new UglifyJsPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        minimize: true,
+        compress: {
+          warnings: false
+        }
+      }
+    }),
+    // 生产环境的css导出路径
+    new ExtractTextPlugin('styles/styles.[hash:8].css')
+  )
 }
 
 module.exports = config

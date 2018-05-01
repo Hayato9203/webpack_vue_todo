@@ -4,7 +4,7 @@
     <!-- @del监听子组件$emit的'del'事件' -->
     <item :todo="todo" v-for="todo in filteredTodos" :key="todo.id" @del="deleteTodo"></item>
     <!-- 给子组件传数据 -->
-    <tabs :filter="filter" :todos="todos" @toggle="toggleFilter"></tabs>
+    <tabs :filter="filter" :todos="todos" @toggle="toggleFilter" @clear="clearCompleted"></tabs>
   </section>
 </template>
 
@@ -42,6 +42,10 @@ export default {
     toggleFilter (state) {
       // 切换显示的内容
       this.filter = state
+    },
+    clearCompleted () {
+      //重新将非completed的数组返回到todos中
+      this.todos = this.todos.filter(todo => !todo.completed)
     }
   },
   computed: {

@@ -1,6 +1,6 @@
 Module build failed: Error: spawn时,npm run dev时,解决方法是npm rebuild
 
-当我访问http://localhost:9000/时，它应该显示由HtmlWebpackPlugin生成的index.html页面,我收到一个404:不能GET /,只在windows平台上出现，(1). 解决方法是去掉require('clean-webpack-plugin'),先build生成production再dev运行development 推荐：(2).在output设置{path: path.resolve(__dirname, './dist'),publicPath: '/'}
+当我访问http://localhost:9000/时，它应该显示由HtmlWebpackPlugin生成的index.html页面,我收到一个404:不能GET /,只在windows平台上出现，(1). 解决方法是去掉require('clean-webpack-plugin'),先build生成production再dev运行development 推荐：(2).在output设置{path: path.resolve(__dirname, './dist'),publicPath: '/'},参考https://www.jianshu.com/p/cbe81be10d78
 
 devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-node-externals和target:node,require只在target为node后台环境,因为在web环境,没有require
 
@@ -9,3 +9,7 @@ devServer的网页Uncaught ReferenceError: require is not defined,去掉webpack-
 出现[Vue warn]: Cannot find element: #app,绕过
 
 webpack编译vue时,stlye中lang="less"编译不通过,解决方法时在rules的less中使用loader: 'vue-style-loader!css-loader!less-loader',文档：https://vue-loader.vuejs.org/guide/scoped-css.html
+
+使用new ExtractTextPlugin()时: 
+1.Error: Chunk.entrypoints: Use Chunks.groupsIterable and filter by instanceof Entrypoint instead: 解决方法时卸载当前的extract-text-webpack-plugin, 安装extract-text-webpack-plugin@next
+2.Error: Path variable [contenthash:8] not implemented in this context: 使用[hash:8]代替
