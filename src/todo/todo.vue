@@ -2,7 +2,7 @@
   <section class="real-app">
     <input type="text" class="input" autofocus="autofocus" placeholder="TODO" @keyup.enter="addTodo">
     <!-- @del监听子组件$emit的'del'事件' -->
-    <item :todo="todo" v-for="todo in todos" :key="todo.id" @del="deleteTodo"></item>
+    <item :todo="todo" v-for="todo in filteredTodos" :key="todo.id" @del="deleteTodo"></item>
     <!-- 给子组件传数据 -->
     <tabs :filter="filter" :todos="todos" @toggle="toggleFilter"></tabs>
   </section>
@@ -42,6 +42,18 @@ export default {
     toggleFilter (state) {
       // 切换显示的内容
       this.filter = state
+    }
+  },
+  computed: {
+    filteredTodos () {
+      // 如果当前选中的时all这个选项,则显示所有的todos
+      if (this.filter === 'all') {
+        return this.todos
+      }
+      // 判断当前是否选中completed
+      let completed = this.filter === 'completed'
+      // 从todos中返回所有completed为true的数组
+      return this.todos.filter(todo => todo.completed === completed)
     }
   },
   components: {
