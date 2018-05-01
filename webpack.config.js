@@ -24,7 +24,7 @@ const config = {
   output: {
     filename: '[name].[hash:8].bundle.js',
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/'
+    publicPath: './'
   },
   module: {
     rules: [{
@@ -121,41 +121,43 @@ const config = {
 
 if (isDev) {
   config.devServer = {
-      contentBase: path.join(__dirname, "dist"),
-      compress: true,
-      port: 9000,
-      // 错误显示到网页
-      overlay: {
-        warnings: true,
-        errors: true
-      },
-      hot: true
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    port: 9000,
+    // 错误显示到网页
+    overlay: {
+      warnings: true,
+      errors: true
     },
-    config.plugins.push(
-      // HMR不应该用在production模式.
-      new webpack.HotModuleReplacementPlugin(),
-      // 减少不需要的信息展示
-      new webpack.NoEmitOnErrorsPlugin()
-    ),
-    config.module.rules.push({
-      // 处理stly文件 
-      test: /\.styl(us)?$/,
-      use: [
-        'vue-style-loader', 'css-loader', {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss',
-            sourceMap: true,
-            plugins: [
-              require('autoprefixer')({
-                browsers: ['last 5 versions']
-              }),
-              require('cssnano')()
-            ]
-          }
-        }, 'stylus-loader'
-      ]
-    })
+    hot: true
+  },
+  config.plugins.push(
+    // HMR不应该用在production模式.
+    new webpack.HotModuleReplacementPlugin(),
+    // 减少不需要的信息展示
+    new webpack.NoEmitOnErrorsPlugin()
+  ),
+  config.module.rules.push({
+    // 处理stly文件 
+    test: /\.styl(us)?$/,
+    use: [
+      'vue-style-loader', 'css-loader', {
+        loader: 'postcss-loader',
+        options: {
+          ident: 'postcss',
+          sourceMap: true,
+          plugins: [
+            require('autoprefixer')({
+              browsers: ['last 5 versions']
+            }),
+            require('cssnano')()
+          ]
+        }
+      }, 'stylus-loader'
+    ]
+  }),
+  // dev模式的devServer时需要配置Server的根路径,prod模式使用默认的路径
+  config.output.publicPath = '/'
 } else {
   config.module.rules.push({
     test: /\.styl(us)?$/,
@@ -167,13 +169,19 @@ if (isDev) {
           loader: 'postcss-loader',
           options: {
             minimize: true,
-            sourceMap: true
+            sourceMap: true,
+            plugins: [
+              require('autoprefixer')({
+                browsers: ['last 5 versions']
+              }),
+              require('cssnano')()
+            ]
           }
         },
         'stylus-loader?sourceMap=true'
       ]
     })
-  })
+  }),
   config.plugins.push(
     // 清除output文件夹
     new CleanWebpackPlugin(['dist']),
@@ -187,8 +195,8 @@ if (isDev) {
         }
       }
     }),
-    // 生产环境的css导出路径
-    new ExtractTextPlugin('styles/styles.[hash:8].css')
+    // 生产环境的css导出
+    new ExtractTextPlugin('styles.[hash:8].css')
   )
 }
 
