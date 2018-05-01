@@ -2,7 +2,7 @@
   <div class="helper">
     <span class="left">{{unCompletedNum}} items left</span>
     <span class="tabs">
-      <span v-for="state in states" :key="state" :class="['state', filter === state ? 'active' : '']" @click="toggleFilter(state)">{{state}}</span>
+      <span v-for="state in states" :key="state" :class="[state, filter === state ? 'actived' : '']" @click="toggleFilter(state)">{{state}}</span>
     </span>
     <span class="clear" @click="clearAllCompleted">Clear Complated</span>
   </div>
@@ -25,7 +25,10 @@
     },
     methods: {
       clearAllCompleted () {},
-      toggleFilter () {}
+      // 点击all, active, completed时显示不同的内容
+      toggleFilter (state) {
+        this.$emit('toggle', state)
+      }
     },
     // 计算属性
     computed: {

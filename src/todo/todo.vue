@@ -4,7 +4,7 @@
     <!-- @del监听子组件$emit的'del'事件' -->
     <item :todo="todo" v-for="todo in todos" :key="todo.id" @del="deleteTodo"></item>
     <!-- 给子组件传数据 -->
-    <tabs :filter="filter" :todos="todos"></tabs>
+    <tabs :filter="filter" :todos="todos" @toggle="toggleFilter"></tabs>
   </section>
 </template>
 
@@ -38,6 +38,10 @@ export default {
       this.todos.splice(
         this.todos.findIndex(
           todo => todo.id === id), 1)
+    },
+    toggleFilter (state) {
+      // 切换显示的内容
+      this.filter = state
     }
   },
   components: {
