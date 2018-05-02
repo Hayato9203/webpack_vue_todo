@@ -1,3 +1,5 @@
 transform-vue-jsx - 专门转换vue里面的jsx代码,jsx直接在javascript中写html,vue或者jsx最终都会转换为render的createElement方法
 
 处理vue文件中自定义的<style lang="less|stylus" scoped>的样式
+
+与业务逻辑的代码相比,单独打包vue等的类库代码比较稳定的文件,提高代码编译效率和利用浏览器缓存提高用户加载效率,config.optimization配置处

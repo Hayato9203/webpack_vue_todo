@@ -6,7 +6,7 @@ const {
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // 将css单独打包出来
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 
@@ -100,12 +100,6 @@ const config = {
     }]
   },
   plugins: [
-    // 请记住，设置NODE_ENV不会自动设置模式
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     NODE_ENV: isDev ? '"development"' : '"production"'
-    //   }
-    // }),    
     new HtmlWebpackPlugin(),
     new VueLoaderPlugin()
   ],
@@ -113,6 +107,7 @@ const config = {
     extensions: ["*", ".js", ".vue", ".less"],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
+      // 将@注册到路径
       '@': path.resolve(__dirname, 'src')
     }
   },
@@ -121,54 +116,30 @@ const config = {
 
 if (isDev) {
   config.devServer = {
-    contentBase: path.join(__dirname, "dist"),
-    compress: true,
-    port: 9000,
-    // 错误显示到网页
-    overlay: {
-      warnings: true,
-      errors: true
+      contentBase: path.join(__dirname, "dist"),
+      compress: true,
+      port: 9000,
+      // 错误显示到网页
+      overlay: {
+        warnings: true,
+        errors: true
+      },
+      hot: true
     },
-    hot: true
-  },
-  config.plugins.push(
-    // HMR不应该用在production模式.
-    new webpack.HotModuleReplacementPlugin(),
-    // 减少不需要的信息展示
-    new webpack.NoEmitOnErrorsPlugin()
-  ),
-  config.module.rules.push({
-    // 处理stly文件 
-    test: /\.styl(us)?$/,
-    use: [
-      'vue-style-loader', 'css-loader', {
-        loader: 'postcss-loader',
-        options: {
-          ident: 'postcss',
-          sourceMap: true,
-          plugins: [
-            require('autoprefixer')({
-              browsers: ['last 5 versions']
-            }),
-            require('cssnano')()
-          ]
-        }
-      }, 'stylus-loader'
-    ]
-  }),
-  // dev模式的devServer时需要配置Server的根路径,prod模式使用默认的路径
-  config.output.publicPath = '/'
-} else {
-  config.module.rules.push({
-    test: /\.styl(us)?$/,
-    use: ExtractTextPlugin.extract({
-      fallback: 'vue-style-loader',
+    config.plugins.push(
+      // HMR不应该用在production模式.
+      new webpack.HotModuleReplacementPlugin(),
+      // 减少不需要的信息展示
+      new webpack.NoEmitOnErrorsPlugin()
+    ),
+    config.module.rules.push({
+      // 处理stly文件 
+      test: /\.styl(us)?$/,
       use: [
-        'css-loader',
-        {
+        'vue-style-loader', 'css-loader', {
           loader: 'postcss-loader',
           options: {
-            minimize: true,
+            ident: 'postcss',
             sourceMap: true,
             plugins: [
               require('autoprefixer')({
@@ -177,27 +148,76 @@ if (isDev) {
               require('cssnano')()
             ]
           }
-        },
-        'stylus-loader?sourceMap=true'
+        }, 'stylus-loader'
       ]
-    })
-  }),
-  config.plugins.push(
-    // 清除output文件夹
-    new CleanWebpackPlugin(['dist']),
-    // 让UglifyJS自动删除警告代码块,并清除source-map的waring
-    new UglifyJsPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        minimize: true,
-        compress: {
-          warnings: false
-        }
-      }
     }),
-    // 生产环境的css导出
-    new ExtractTextPlugin('styles.[hash:8].css')
-  )
+    // dev模式的devServer时需要配置Server的根路径,prod模式使用默认的路径
+    config.output.publicPath = '/'
+} else {
+  config.entry = {
+      // 将目标文件生成app: vendor.b32e2908.bundle.js(较大)与app.03c0b604.bundle.js(较小)
+      main: [path.resolve(__dirname, 'src/index.js')],
+      // 将比较稳定的类库代码单独打包
+      vendor: ['vue']
+    },
+    config.output.filename = '[name].[chunkhash:8].js',
+    // 启用类库
+    // CommonsChunkPlugin已在webpack 4中删除
+    config.optimization = {
+      minimize: false,
+      splitChunks: {
+        cacheGroups: {
+          default: false,
+          commons: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendor",
+            chunks: "all",
+            minSize: 1
+          }
+        }
+      },
+      // 模块更改会改变文件的hash,重新生成浏览器缓存
+      runtimeChunk: 'single'
+    },
+    config.module.rules.push({
+      test: /\.styl(us)?$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'vue-style-loader',
+        use: [
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              minimize: true,
+              sourceMap: true,
+              plugins: [
+                require('autoprefixer')({
+                  browsers: ['last 5 versions']
+                }),
+                require('cssnano')()
+              ]
+            }
+          },
+          'stylus-loader?sourceMap=true'
+        ]
+      })
+    }),
+    config.plugins.push(
+      // 清除output文件夹
+      new CleanWebpackPlugin(['dist']),
+      // 让UglifyJS自动删除警告代码块,并清除source-map的waring
+      new UglifyJsPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          minimize: true,
+          compress: {
+            warnings: false
+          }
+        }
+      }),
+      // 生产环境的css导出
+      new ExtractTextPlugin('styles.[hash:8].css'),
+    )
 }
 
 module.exports = config
