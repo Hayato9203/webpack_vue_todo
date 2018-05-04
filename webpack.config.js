@@ -104,7 +104,9 @@ const config = {
     new VueLoaderPlugin()
   ],
   resolve: {
+	//	可以在require()时不添加后缀名
     extensions: ["*", ".js", ".vue", ".less"],
+	// 注册别名
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       // 将@注册到路径
@@ -206,6 +208,7 @@ if (isDev) {
       // 清除output文件夹
       new CleanWebpackPlugin(['dist']),
       // 让UglifyJS自动删除警告代码块,并清除source-map的waring
+      // 这个模块已不需要,production自动,已被移到optimization.minimize中
       new UglifyJsPlugin({
         sourceMap: true,
         uglifyOptions: {
